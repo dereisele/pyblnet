@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-PyBLNET is a Python client for the BL-NET gateway by Technische Alternative, which sits in front of a UVR1611 heating controller. It reads analog/digital values and can set switches to ON/OFF/AUTO. Managed with uv: `uv_build` backend, dev tools in the `dev` dependency group, and `uv.lock` committed. Runtime deps are `requests` and `htmldom`. CI tests Python 3.8–3.13 with `uv sync --locked`, so run `uv lock` after changing dependencies. Pushing a `*.*.*` tag triggers the release workflow: a GitHub release, then `uv build` + `uv publish` to PyPI. When releasing, bump the version in both `pyproject.toml` and `VERSION` in `pyblnet/__init__.py`.
+PyBLNET is a Python client for the BL-NET gateway by Technische Alternative, which sits in front of a UVR1611 heating controller. It reads analog/digital values and can set switches to ON/OFF/AUTO. Managed with uv: `uv_build` backend, dev tools in the `dev` dependency group, and `uv.lock` committed. Runtime deps are `requests` and `htmldom`. CI tests Python 3.11–3.15 with `uv sync --locked`, so run `uv lock` after changing dependencies. Pushing a `*.*.*` tag triggers the release workflow: a GitHub release, then `uv build` + `uv publish` to PyPI. When releasing, bump the version in both `pyproject.toml` and `VERSION` in `pyblnet/__init__.py`.
 
 ## Commands
 
@@ -13,7 +13,7 @@ uv sync                                # create .venv with package + dev group
 uv run pytest tests                    # full suite
 uv run pytest tests/test_web.py::BLNETWebTest::test_blnet_fetch   # single test
 uv run coverage run --source=pyblnet -m pytest tests && uv run coverage report   # what CI runs
-uv run --isolated --python 3.8 pytest tests   # oldest supported Python, leaves .venv alone
+uv run --isolated --python 3.11 pytest tests   # oldest supported Python, leaves .venv alone
 uv run ruff check pyblnet tests        # no project config for ruff, and CI doesn't run it
 uv build                               # sdist + wheel into dist/
 ```
