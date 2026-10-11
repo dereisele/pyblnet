@@ -8,6 +8,7 @@ https://github.com/berwinter/uvr1611/blob/master/lib/backend/blnet-connection.in
 @author: Niels
 """
 from socket import socket, getaddrinfo, SOCK_STREAM, IPPROTO_TCP
+import functools
 import struct
 from time import sleep
 from datetime import datetime
@@ -28,6 +29,27 @@ WAIT_TIME = 0xBA
 MAX_RETRYS = 10
 DATASET_SIZE = 61
 LATEST_SIZE = 56
+
+
+def _reset_on_error(method):
+    """
+    Close the connection and forget the read state if a read fails,
+    so that the next call starts with a fresh connection.
+    Malformed replies are raised as ConnectionError.
+    """
+
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        try:
+            return method(self, *args, **kwargs)
+        except (struct.error, IndexError, ValueError) as ex:
+            self._reset()
+            raise ConnectionError(f"Invalid reply from BL-Net: {ex}") from ex
+        except BaseException:
+            self._reset()
+            raise
+
+    return wrapper
 
 
 class BLNETDirect:
@@ -60,6 +82,7 @@ class BLNETDirect:
         self._count = None
         self._check_mode()
 
+    @_reset_on_error
     def get_count(self):
         """
         Get the number of datasets in the bootloader memory
@@ -126,20 +149,18 @@ class BLNETDirect:
         else:
             raise ConnectionError("Could not retreive count")
 
+    @_reset_on_error
     def _get_data(self, max_count=None):
         data = []
-        try:
-            count = self._start_read()
-            if isinstance(max_count, int):
-                count = min(max_count, count)
-            for _ in range(0, count):
-                data.append(self._fetch_data())
-            self._end_read(True)
-            return data
-        finally:
-            self._end_read(False)
-            return data
+        count = self._start_read()
+        if isinstance(max_count, int):
+            count = min(max_count, count)
+        for _ in range(0, count):
+            data.append(self._fetch_data())
+        self._end_read(True)
+        return data
 
+    @_reset_on_error
     def _check_mode(self):
         """
         Check if Bootloader Mode is supported
@@ -181,26 +202,35 @@ class BLNETDirect:
         self._socket.close()
         self._socket = None
 
+    def _reset(self):
+        """
+        Close the connection if open and forget the read state
+        """
+        if self._socket is not None:
+            self._disconnect()
+        self._count = None
+        self._address = None
+
     def _query(self, command, length):
         """
         Send a command to the bootloader and wait for the response
         if response is less then 32 bytes long return immediately
         @param commmand: string only ascii (needs byte length == string length)
         @param length: int length of response
-        @throws ConnectionError error when querying
+        @throws ConnectionError BL-Net closed the connection
         @return Binary: byte string
         """
-        if len(command) == self._socket.send(command):
-            data = b""
-            # get response until length or less than 32 bytes
-            while True:
-                data += self._socket.recv(length)
-                if len(data) <= 32 or len(data) >= length:
-                    break
-            return data
-
-        self._disconnect()
-        raise ConnectionError(f"Error while querying command {command}")
+        self._socket.sendall(command)
+        data = b""
+        # get response until length or less than 32 bytes
+        while True:
+            received = self._socket.recv(length)
+            if not received:
+                raise ConnectionError("BL-Net closed the connection")
+            data += received
+            if len(data) <= 32 or len(data) >= length:
+                break
+        return data
 
     def _start_read(self):
         """
@@ -308,6 +338,7 @@ class BLNETDirect:
         self._address = None
         self._disconnect()
 
+    @_reset_on_error
     def get_latest(self, max_retries=MAX_RETRYS):
         """
         Fetch latest (current) data from the BLNet
