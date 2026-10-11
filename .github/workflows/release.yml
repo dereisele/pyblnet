@@ -16,7 +16,12 @@ jobs:
           prerelease: false
           skipIfReleaseExists: true
 
-      - name: To PyPI using Flit
-        uses: AsifArmanRahman/to-pypi-using-flit@v1
-        with:
-          password: ${{ secrets.PYPI_TOKEN }}
+      - uses: astral-sh/setup-uv@v10.2.0
+
+      - name: Build
+        run: uv build
+
+      - name: Publish to PyPI
+        run: uv publish
+        env:
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_TOKEN }}
