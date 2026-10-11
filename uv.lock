@@ -208,12 +208,6 @@ wheels = [
 ]
 
 [[package]]
-name = "htmldom"
-version = "2.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/0a/d6/792e554cf74651a73b0cb8ca24f12fa1563834c5fd804a1a4458432d934f/htmldom-2.0.tar.gz", hash = "sha256:cd8550106f6b8f43383d514826113eb08450a068e7fb81ac2e18bfcdc1e12503", size = 11944, upload-time = "2012-06-28T15:07:00.172Z" }
-
-[[package]]
 name = "idna"
 version = "3.11"
 source = { registry = "https://pypi.org/simple" }
@@ -254,7 +248,6 @@ name = "pyblnet"
 version = "0.12.0.dev0"
 source = { editable = "." }
 dependencies = [
-    { name = "htmldom" },
     { name = "requests" },
 ]
 
@@ -266,10 +259,7 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [
-    { name = "htmldom" },
-    { name = "requests" },
-]
+requires-dist = [{ name = "requests" }]
 
 [package.metadata.requires-dev]
 dev = [
