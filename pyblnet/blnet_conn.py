@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 Created on 09.08.2018
 
@@ -8,7 +7,6 @@ https://github.com/berwinter/uvr1611/blob/master/lib/backend/blnet-connection.in
 
 @author: Niels
 """
-from builtins import str, int
 from socket import socket, getaddrinfo, SOCK_STREAM, IPPROTO_TCP
 import struct
 from time import sleep
@@ -32,7 +30,7 @@ DATASET_SIZE = 61
 LATEST_SIZE = 56
 
 
-class BLNETDirect(object):
+class BLNETDirect:
     """
     A class for establishing a direct connection to the BLNET (rather than
     scraping the web interface)
@@ -73,7 +71,7 @@ class BLNETDirect(object):
 
             if self._checksum(data):
                 if self._mode == CAN_MODE:
-                    frame_count = struct.unpack("<{}B".format(len(data)), data)[5]
+                    frame_count = struct.unpack(f"<{len(data)}B", data)[5]
                     (
                         type,
                         version,
@@ -83,7 +81,7 @@ class BLNETDirect(object):
                         start_address,
                         end_address,
                         checksum,
-                    ) = struct.unpack("<BB3sB{}s3s3sB".format(frame_count), data)
+                    ) = struct.unpack(f"<BB3sB{frame_count}s3s3sB", data)
                     self._address_inc = 64 * frame_count
                     self._can_frames = frame_count
                     self._actual_size = 57
@@ -201,7 +199,7 @@ class BLNETDirect(object):
             return data
 
         self._disconnect()
-        raise ConnectionError("Error while querying command {}".format(command))
+        raise ConnectionError(f"Error while querying command {command}")
 
     def _start_read(self):
         """
@@ -216,7 +214,7 @@ class BLNETDirect(object):
         @param byte string $data Binary string to check
         @return boolean
         """
-        binary = struct.unpack("<{}B".format(len(data)), data)
+        binary = struct.unpack(f"<{len(data)}B", data)
         checksum = binary[-1]
 
         sum = 0

@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 Created on 26.09.2017
 
@@ -13,7 +12,6 @@ import requests
 from htmldom import htmldom
 import html
 import re
-from builtins import int
 
 
 def blnet_test(ip, timeout=5, id=0):
@@ -39,7 +37,7 @@ def blnet_test(ip, timeout=5, id=0):
     return False
 
 
-class BLNETWeb(object):
+class BLNETWeb:
     """
     Interface for connecting with, collecting data from and controlling the BLNet
     via it's HTTP-interface
@@ -64,7 +62,7 @@ class BLNETWeb(object):
         if not ip.startswith("http://") and not ip.startswith("https://"):
             ip = "http://" + ip
         if not blnet_test(ip):
-            raise ValueError("No BLNET found under given address: {}".format(ip))
+            raise ValueError(f"No BLNET found under given address: {ip}")
         self.ip = ip
         self.password = password
         self._timeout = timeout
@@ -282,11 +280,11 @@ class BLNETWeb(object):
         # throw error for wrong id's
         if digital_id < 1:
             raise ValueError(
-                "Device id can't be smaller than 1, was {}".format(digital_id)
+                f"Device id can't be smaller than 1, was {digital_id}"
             )
         if digital_id > 15:
             raise ValueError(
-                "Device id can't be larger than 15, was {}".format(digital_id)
+                f"Device id can't be larger than 15, was {digital_id}"
             )
         # transform input value to 'EIN' or 'AUS'
         if isinstance(value, str):
@@ -305,14 +303,14 @@ class BLNETWeb(object):
             ):
                 value = "1"  # 1 means turn off
             else:
-                raise ValueError("Illegal input string {}".format(value))
+                raise ValueError(f"Illegal input string {value}")
         elif isinstance(value, int) and not isinstance(value, bool):
             if value in (1, 2, 3):
                 value = str(value)
             elif value == 0:
                 value = "1"
             else:
-                raise ValueError("Illegal input integer {}".format(value))
+                raise ValueError(f"Illegal input integer {value}")
         else:
             # value can be interpreted as a true value
             if value:
@@ -329,7 +327,7 @@ class BLNETWeb(object):
         # submit data to website
         try:
             r = requests.get(
-                "{}/580600.htm?blw91A1200{}={}".format(self.ip, digital_id, value),
+                f"{self.ip}/580600.htm?blw91A1200{digital_id}={value}",
                 headers=self.cookie_header(),
                 timeout=self._timeout,
             )

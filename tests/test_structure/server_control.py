@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import threading
 
@@ -15,7 +14,7 @@ class Server:
 
     def _run_server(self):
 
-        print("Server started, serving on port {}".format(self.get_port()))
+        print(f"Server started, serving on port {self.get_port()}")
 
         # notify about start
         self._server_started_event.set()

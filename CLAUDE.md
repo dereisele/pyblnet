@@ -14,7 +14,7 @@ uv run pytest tests                    # full suite
 uv run pytest tests/test_web.py::BLNETWebTest::test_blnet_fetch   # single test
 uv run coverage run --source=pyblnet -m pytest tests && uv run coverage report   # what CI runs
 uv run --isolated --python 3.11 pytest tests   # oldest supported Python, leaves .venv alone
-uv run ruff check pyblnet tests        # no project config for ruff, and CI doesn't run it
+uv run ruff check pyblnet tests        # ruff defaults + pyupgrade (UP); UP is clean, other default rules still report issues; CI does not run ruff
 uv build                               # sdist + wheel into dist/
 ```
 

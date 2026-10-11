@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 Created on 13.08.2018
 
@@ -16,7 +15,7 @@ from .blnet_conn import BLNETDirect
 from urllib.parse import urlparse
 
 
-class BLNET(object):
+class BLNET:
     """
     General high-level BLNET interface.
 
@@ -61,7 +60,7 @@ class BLNET(object):
         self.blnet_direct = None
         if use_web:
             self.blnet_web = BLNETWeb(
-                "{}:{}".format(address, web_port), password, timeout
+                f"{address}:{web_port}", password, timeout
             )
         if use_ta:
             # The address might not have a resulting hostname
@@ -137,17 +136,15 @@ class BLNET(object):
                 if can_node is not None:
                     if not blnet_session.set_node(can_node):
                         raise ConnectionError(
-                            "Could not set can node to {}".format(can_node)
+                            f"Could not set can node to {can_node}"
                         )
                 if not blnet_session.set_digital_value(digital_id, value):
                     raise ConnectionError(
-                        "Failed to set digital switch {} to value {}".format(
-                            digital_id, value
-                        )
+                        f"Failed to set digital switch {digital_id} to value {value}"
                     )
             return True
         else:
-            raise EnvironmentError("Can't set values with blnet web disabled")
+            raise OSError("Can't set values with blnet web disabled")
 
     def get_value(self, name=None, id=None, type="digital", ret="value", cached=None):
         """

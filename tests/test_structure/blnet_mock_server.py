@@ -121,7 +121,7 @@ class BLNETRequestHandler(SimpleHTTPRequestHandler):
             if query.startswith("blu"):
                 if query.split("=")[1] != "1":
                     self.send_error(
-                        403, "Wrong user set: expected blu=1, got {}".format(query)
+                        403, f"Wrong user set: expected blu=1, got {query}"
                     )
                     return
                 blu = True
@@ -129,9 +129,7 @@ class BLNETRequestHandler(SimpleHTTPRequestHandler):
                 if query.split("=")[1] != self.server.password:
                     self.send_error(
                         403,
-                        "Wrong password: expected blp={}, got {}".format(
-                            self.server.password, query
-                        ),
+                        f"Wrong password: expected blp={self.server.password}, got {query}",
                     )
                     return
                 blp = True
@@ -139,14 +137,12 @@ class BLNETRequestHandler(SimpleHTTPRequestHandler):
                 if query.split("=")[1] != "Login":
                     self.send_error(
                         403,
-                        "Wrong bll spec, expected bll=Login, got {}".format(
-                            request_string
-                        ),
+                        f"Wrong bll spec, expected bll=Login, got {request_string}",
                     )
                     return
                 bll = True
         if not (blu and blp and bll):
-            self.send_error(403, "Missing query param in {}".format(request_string))
+            self.send_error(403, f"Missing query param in {request_string}")
             return
         # Check for content type
         if not self.headers.get("Content-Type") == "application/x-www-form-urlencoded":

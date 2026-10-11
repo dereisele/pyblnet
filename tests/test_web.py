@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 # general requirements
 import unittest
@@ -60,7 +59,7 @@ class BLNETWebTest(unittest.TestCase):
         self.server_control = Server(self.server)
         self.server.set_password(PASSWORD)
         self.port = self.server_control.get_port()
-        self.url = "http://{}:{}".format(ADDRESS, self.port)
+        self.url = f"http://{ADDRESS}:{self.port}"
         # Start test server before running any tests
         self.server_control.start_server()
 
@@ -79,7 +78,7 @@ class BLNETWebTest(unittest.TestCase):
             self.assertTrue(blnet.logged_in())
         # test without http
         blnet = BLNETWeb(
-            "{}:{}".format(ADDRESS, self.port), password=PASSWORD, timeout=10
+            f"{ADDRESS}:{self.port}", password=PASSWORD, timeout=10
         )
         with blnet as blnet:
             self.assertTrue(blnet.logged_in())
