@@ -1,8 +1,6 @@
 # PyBLNET - a very basic python BL-NET bridge
-![PyPI - Version](https://img.shields.io/pypi/v/pyblnet)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pyblnet)
-[![Build status](https://github.com/nielstron/pyblnet/actions/workflows/build.yml/badge.svg)](https://github.com/nielstron/pyblnet/actions/workflows/build.yml)
-[![Coverage Status](https://coveralls.io/repos/github/nielstron/pyblnet/badge.svg?branch=master)](https://coveralls.io/github/nielstron/pyblnet?branch=master)
+[![Build status](https://github.com/dereisele/pyblnet/actions/workflows/build.yml/badge.svg)](https://github.com/dereisele/pyblnet/actions/workflows/build.yml)
+[![Coverage Status](https://coveralls.io/repos/github/dereisele/pyblnet/badge.svg?branch=master)](https://coveralls.io/github/dereisele/pyblnet?branch=master)
 
 A package that connects to the BL-NET that is connected itself to a UVR1611 device by Technische Alternative. 
 It is able to read digital and analog values as well as to set switches to ON/OFF/AUTO.
@@ -13,13 +11,28 @@ Two interfaces to BLNet exist and both are supported:
 - Webinterface  - Class BLnetWeb
 - BLNet-Direct protocol [1] - Class BLNETDirect
 
-However, as of now, there is no testing on the BLNet-Direct protocol *of any kind*, so enabling it is discouraged until the interface is fixed.
-Parsing the data via the web interface is the preferred way of accessing the BLNet for now.
+BLNet-Direct is tested against responses recorded from a real BL-NET in DL mode (one UVR1611).
+CAN and 2DL mode as well as reading logged data are still untested, so the web interface remains the safer choice there.
 
 The class BLNET is a wrapper around the two classes. When initializing the class, the two interfaces can be activated/deactivated. 
 BLNetDirect provides 'analog', 'digital',  'speed', 'energy', 'power', whereas BLnetWeb supports 'analog' and 'digital' only.
 If both are active, BLNetDirect has priority.
 Setting switches and reading their manual/auto state is only possible via the BLNetWeb interface.
+
+### Installation
+
+This fork is not published on PyPI. The `PyBLNET` package on PyPI is released by the upstream project and doesn't contain the changes made here.
+Install it from GitHub instead (Python 3.11 or newer):
+
+```bash
+pip install git+https://github.com/dereisele/pyblnet.git
+# or a specific release
+pip install git+https://github.com/dereisele/pyblnet.git@0.11.0
+# or with uv
+uv add git+https://github.com/dereisele/pyblnet.git
+```
+
+Each [release](https://github.com/dereisele/pyblnet/releases) also has the wheel and sdist attached.
 
 ### Usage
 

@@ -31,7 +31,8 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/nielstron/pyblnet/"
+"Homepage" = "https://github.com/dereisele/pyblnet/"
+"Upstream" = "https://github.com/nielstron/pyblnet/"
 
 [dependency-groups]
 dev = [

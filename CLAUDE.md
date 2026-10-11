@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-PyBLNET is a Python client for the BL-NET gateway by Technische Alternative, which sits in front of a UVR1611 heating controller. It reads analog/digital values and can set switches to ON/OFF/AUTO. Managed with uv: `uv_build` backend, dev tools in the `dev` dependency group, and `uv.lock` committed. Runtime deps are `requests` and `htmldom`. CI tests Python 3.11–3.15 with `uv sync --locked`, so run `uv lock` after changing dependencies. Pushing a `*.*.*` tag triggers the release workflow: a GitHub release, then `uv build` + `uv publish` to PyPI. When releasing, bump the version in both `pyproject.toml` and `VERSION` in `pyblnet/__init__.py`.
+PyBLNET is a Python client for the BL-NET gateway by Technische Alternative, which sits in front of a UVR1611 heating controller. It reads analog/digital values and can set switches to ON/OFF/AUTO. Managed with uv: `uv_build` backend, dev tools in the `dev` dependency group, and `uv.lock` committed. Runtime deps are `requests` and `htmldom`. CI tests Python 3.11–3.15 with `uv sync --locked`, so run `uv lock` after changing dependencies. Pushing a `*.*.*` tag triggers the release workflow: `uv build`, then a GitHub release with the wheel and sdist attached. This fork is not published to PyPI (the `PyBLNET` package there belongs to upstream); users install from GitHub. When releasing, bump the version in both `pyproject.toml` and `VERSION` in `pyblnet/__init__.py`.
 
 ## Commands
 
