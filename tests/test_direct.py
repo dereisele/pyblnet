@@ -59,6 +59,11 @@ class BLNETDirectOnlyTest(unittest.TestCase):
         self.assertEqual(data["energy"], {1: {"value": 362847.4, "unit_of_measurement": "kWh"}})
         self.assertEqual(data["power"], {1: {"value": 0.0, "unit_of_measurement": "kW"}})
 
+    def test_fetch_leaves_out_inputs_without_sensor(self):
+        # inputs 1-5 and 15 of the recorded BL-NET have no sensor connected
+        data = self.blnet().fetch()
+        self.assertEqual(sorted(data["analog"]), [6, 7, 8, 9, 10, 11, 12, 13, 14, 16])
+
     def test_get_value_by_id(self):
         value, entry, _ = self.blnet().get_analog_value(id=6)
         self.assertEqual(value, 53.9)

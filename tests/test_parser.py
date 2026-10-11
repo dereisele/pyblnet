@@ -34,6 +34,15 @@ class TestParser(unittest.TestCase):
         assert parsed_values['analog'][3] is None
         assert parsed_values['analog'][4] == 0
 
+    def test_parser_disconnected_temperature_sensor_is_none(self):
+        # A temperature input without sensor reads all value bits set (409.5 °C)
+        inputs = [0x2FFF, 0x2FFE] + [0x2000] * 14
+        data = struct.pack('<16H', *inputs) + bytes(55 - 32)
+        parsed_values = BLNETParser(data).to_dict()
+
+        assert parsed_values['analog'][1] is None
+        assert parsed_values['analog'][2] == 409.4
+
     def test_parser_input_types(self):
         # temperature, volume flow, radiation, digital, unused, room sensor, undocumented type 101
         inputs = [0x2000, 0x3000, 0x4000, 0x1000, 0x0000, 0x7000, 0x5000] + [0x2000] * 9
