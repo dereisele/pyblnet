@@ -15,7 +15,7 @@ jobs:
         python-version: ["3.11", "3.12", "3.13", "3.14", "3.15"]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     - name: Set up uv with Python ${{ matrix.python-version }}
       uses: astral-sh/setup-uv@v10.2.0
       with:
@@ -38,11 +38,13 @@ jobs:
       name: Indicate completion to coveralls.io
       needs: build
       runs-on: ubuntu-latest
-      container: python:3-slim
       steps:
-      - name: Install coveralls
-        run: pip3 install --upgrade coveralls
+      - uses: astral-sh/setup-uv@v10.2.0
+        with:
+          # this job has no checkout
+          enable-cache: false
+          ignore-empty-workdir: true
       - name: Finished
-        run: coveralls --finish
+        run: uvx coveralls --finish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
